@@ -6,10 +6,6 @@ exports.handler = (inputErrors) => {
         } else {
             outputErrors[item.param] = new Array(item.msg);
         }
-
     });
-
-
-
     return outputErrors;
 }

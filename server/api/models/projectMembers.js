@@ -1,36 +1,35 @@
 const Sequelize = require('sequelize');
-const sequelize = require('./database-connection');
-
+const dbConnection = require('./database-connection');
 const Project = require('./project')
 const User = require('./user')
 
-const ProjectMembers = sequelize.define('projectmembers', {
-    id: {
+//! INITIALIZING THE PROEJCT MEMBER PROPERTY IN DATABASE
+const ProjectMembers = dbConnection.define('projectmembers', {
+    projectMemberId: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false
     },
-    userid: {
+    memberId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
             model: User,
-            key: 'id',
+            key: 'userId',
             deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
         }
     },
-    projectid: {
+    projectId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
             model: Project,
-            key: 'id',
+            key: 'projectId',
             deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
         }
     }
-
 });
 
-// Board.belongsTo(Project);
+
 module.exports = ProjectMembers;

@@ -1,12 +1,11 @@
 const Sequelize = require('sequelize');
-const sequelize = require('./database-connection');
-
+const dbConnection = require('./database-connection');
 const User = require('./user')
-const Board = require('./board')
 const ProjectMembers = require('./projectMembers')
 
-const Project = sequelize.define('project', {
-    id: {
+//! INITIALIZING THE PROEJCT PROPERTY IN DATABASE
+const Project = dbConnection.define('project', {
+    projectId: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
@@ -22,25 +21,20 @@ const Project = sequelize.define('project', {
         type: Sequelize.STRING,
         unique: false
     },
-    userid: {
+    creatorId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
             model: User,
-            key: 'id',
+            key: 'userId',
             deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
         }
     }
 
 });
 
-// Board.belongsTo(Project);
-
-Project.hasMany(Board, {
-    foreignKey: 'projectid'
-});
 
 Project.hasMany(ProjectMembers, {
-    foreignKey: 'projectid'
+    foreignKey: 'projectId'
 });
 module.exports = Project;

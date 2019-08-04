@@ -1,50 +1,38 @@
-const sequelize = require('../models/database-connection');
 const Project = require('../models/project');
-const Board = require('../models/board');
 const ProjectMembers = require('../models/projectMembers');
+const User = require('../models/user')
 exports.getProjectMembers = (req, res) => {
-    Board.findAll({
-        where: {
-            userid: req.user.id,
-            projectid: req.body.projectid
-        }
-    }).then(boards => {
-        res.status(200).json({
-            boards
+    // get all projects that this person is a member of 
+    //TODO fix this shit
+    ProjectMembers.findAll({
+            where: {
+                projectId: req.body.projectId
+            },
+            // include: [{
+            //     model: User
+            // }]
+        })
+        .then(result => {
+            return res.status(200).json({
+                result
+            });
         });
-    });
 };
 
 exports.addMembers = (req, res) => {
-    console.log(
-        Project.findAll({
-            where: {
-                id: req.body.projectid
-            },
-            attributes: ['userid']
-        })
-    );
-    // if (req.user.id === Project.findAll({
-    //         where: {
-    //             id: req.body.projectid
-    //         },
-    //         attributes: ['userid']
-
-    //     }))
-
     ProjectMembers.create({
-            userid: req.body.userid,
-            projectid: req.body.projectid
+            memberId: req.body.userId,
+            projectId: req.body.projectId
         })
         .then(() => {
             return res.status(200).json({
-                message: `member added to project!`
+                message: 'member added to project'
             });
         })
         .catch(err => {
             return res.status(500).json({
-                message: 'member FAILED !',
-                err
+                error: err,
+                message: 'adding member FAILED !'
             });
         });
 };

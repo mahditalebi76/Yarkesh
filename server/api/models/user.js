@@ -1,13 +1,11 @@
 const Sequelize = require('sequelize');
-const sequelize = require('./database-connection');
-
+const dbConnection = require('./database-connection');
 const Project = require('./project');
-const Board = require('./board');
 const ProjectMembers = require('./projectMembers');
 
-//user in database
-const User = sequelize.define('user', {
-  id: {
+//!----------------------------------User definition in database----------------------------------
+const User = dbConnection.define('user', {
+  userId: {
     type: Sequelize.INTEGER,
     primaryKey: true,
     autoIncrement: true,
@@ -34,14 +32,16 @@ const User = sequelize.define('user', {
 });
 
 User.hasMany(Project, {
-  foreignKey: 'userid'
+  foreignKey: 'creatorId',
+  onDelete: 'CASCADE',
+  constraints: true
 });
 
-User.hasMany(Board, {
-  foreignKey: 'userid'
-});
+//TODO delete this
 User.hasMany(ProjectMembers, {
-  foreignKey: 'userid'
+  foreignKey: 'memberId',
+  onDelete: 'CASCADE',
+  constraints: true
 });
 
 module.exports = User;

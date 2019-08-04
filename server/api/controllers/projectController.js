@@ -1,27 +1,66 @@
-const sequelize = require('../models/database-connection');
 const Project = require('../models/project')
-
-exports.getProjects = (req, res) => {
+const ProjectMembers = require('../models/projectMembers')
+const User = require('../models/user')
+exports.getProjectsByCreatorId = (req, res) => {
+  // finding projects created by this certain user
   Project.findAll({
-    where: {
-      userid: req.user.id
-    }
-  }).then(resu => {
-    res.status(200).json({
-      resu
-    });
-  });
+      where: {
+        creatorId: req.user.userId
+      }
+    }).then(projects => {
+      return res.status(200).json({
+        projects
+      });
+    })
+    .catch(
+      err => {
+        return res.status(500).json({
+          err
+        })
+      }
+    );
 };
 
 
+
+exports.getSingleProject = (req, res) => {
+  Project.findAll({
+      where: {
+        projectId: req.body.projectId
+      },
+      include: [{
+        model: User,
+        required: true
+      }]
+    })
+    .then(projectInfo => {
+      return res.status(200).json({
+        projectInfo: projectInfo[0]
+      })
+    })
+    .catch(
+      err => {
+        return res.status(500).json({
+          err
+        })
+      }
+    );
+
+};
+
 exports.createProject = (req, res) => {
-  // sequelize.sync().then(() => {
+  //creating project with foreign key for user
   Project.create({
       title: req.body.title,
       description: req.body.description,
-      userid: req.user.id,
+      // foreign key to user : creatorId given from the jwt
+      creatorId: req.user.userId,
     })
-    .then(() => {
+    .then(result => {
+      ProjectMembers.create({
+        memberId: req.user.userId,
+        projectId: result.projectId
+      })
       return res.status(200).json({
         message: `project created!`
       });
@@ -32,6 +71,4 @@ exports.createProject = (req, res) => {
         err
       });
     });
-  // });
-
 }
