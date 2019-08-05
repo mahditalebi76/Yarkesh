@@ -4,9 +4,10 @@ const validation = require('./api/controllers/validation')
 const passport = require('passport')
 const projectController = require('./api/controllers/projectController')
 const projectMemberController = require('./api/controllers/projectMemberController')
-
+const storyController = require('./api/controllers/storyController')
 //! ----------------------------------Test Routes Not finished----------------------------------
-
+router.post('/createStory', storyController.createStory);
+router.post('/getProjectStories', storyController.getProjectStories);
 
 
 
@@ -22,6 +23,8 @@ router.post('/signin', userController.signIn);
 router.get('/singleUserInfo', passport.authenticate("jwt", {
     session: false
 }), userController.getUserInfo);
+
+router.post('/getUserProjects', userController.getUserProjects);
 
 //* Project routes
 router.post('/getProjectsByCreator', passport.authenticate("jwt", {

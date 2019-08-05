@@ -14,20 +14,20 @@ const ProjectMembers = dbConnection.define('projectmembers', {
     memberId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {
-            model: User,
-            key: 'userId',
-            deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
-        }
+        // references: {
+        //     model: User,
+        //     key: 'userId',
+        //     deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+        // }
     },
     projectId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {
-            model: Project,
-            key: 'projectId',
-            deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
-        }
+        // references: {
+        //     model: Project,
+        //     key: 'projectId',
+        //     deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+        // }
     }
 });
 

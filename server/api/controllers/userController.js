@@ -6,7 +6,8 @@ const jwtSecret = require('../../config/secretAndUrl').jwtSecret;
 const {
   validationResult
 } = require('express-validator');
-
+const ProjectMembers = require('../models/projectMembers')
+const Project = require('../models/project')
 //! FOR TEST ONLY
 exports.getUserInfo = (req, res) => {
   User.findAll({
@@ -24,6 +25,32 @@ exports.getUserInfo = (req, res) => {
       })
     });
 };
+
+exports.getUserProjects = (req, res) => {
+  ProjectMembers.findAll({
+      where: {
+        memberId: req.body.userId
+      },
+      include: [{
+        model: Project,
+        attributes: ['title', 'projectId', 'description', 'createdAt'],
+        include: [{
+          model: User,
+          attributes: ['name']
+        }]
+      }]
+    }).then(projects => {
+      return res.status(200).json({
+        projects: projects.map(project => project.project)
+      });
+    })
+    .catch(err => {
+      return res.status(500).json({
+        err
+      })
+    });
+};
+
 
 exports.signUp = (req, res) => {
 
