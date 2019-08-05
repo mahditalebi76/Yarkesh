@@ -20,10 +20,11 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use('/api', router);
 
-//! ----------------------------------Database Sync----------------------------------
+//! ----------------------------------Database Sync--------------------------------
 Project.belongsTo(User, {
     foreignKey: 'creatorId',
-    targetKey: 'userId'
+    targetKey: 'userId',
+    as: 'creator'
 });
 
 ProjectMembers.belongsTo(Project, {
@@ -34,8 +35,6 @@ ProjectMembers.belongsTo(User, {
     foreignKey: 'memberId',
     targetKey: 'userId'
 });
-
-
 sequelize.sync();
 
 module.exports = app;

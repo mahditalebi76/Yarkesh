@@ -5,12 +5,15 @@ const passport = require('passport')
 const projectController = require('./api/controllers/projectController')
 const projectMemberController = require('./api/controllers/projectMemberController')
 const storyController = require('./api/controllers/storyController')
+const authenticateRoutes = require('./api/controllers/authentication')
 //! ----------------------------------Test Routes Not finished----------------------------------
-router.post('/createStory', storyController.createStory);
+router.post('/createStory', passport.authenticate("jwt", {
+    session: false
+}), authenticateRoutes.isMember, storyController.createStory);
 router.post('/getProjectStories', storyController.getProjectStories);
-
-
-
+router.post('/getStoryDetails', passport.authenticate("jwt", {
+    session: false
+}), authenticateRoutes.isMember, storyController.getStoryDetials);
 
 router.post('/getmembers', projectMemberController.getProjectMembers)
 
@@ -18,28 +21,47 @@ router.post('/getmembers', projectMemberController.getProjectMembers)
 //!----------------------------------Finished Routes----------------------------------
 
 //* User routes
-router.post('/signup', validation.signUp, userController.signUp);
-router.post('/signin', userController.signIn);
-router.get('/singleUserInfo', passport.authenticate("jwt", {
-    session: false
-}), userController.getUserInfo);
+router.post(
+    '/signup',
+    validation.signUp,
+    userController.signUp
+);
+router.post(
+    '/signin',
+    userController.signIn
+);
 
-router.post('/getUserProjects', userController.getUserProjects);
+router.get(
+    '/singleUserInfo',
+    passport.authenticate("jwt", { session: false }),
+    userController.getUserInfo
+);
+
+router.post(
+    '/getUserProjects',
+    passport.authenticate("jwt", { session: false }),
+    userController.getUserProjects
+);
 
 //* Project routes
-router.post('/getProjectsByCreator', passport.authenticate("jwt", {
-    session: false
-}), projectController.getProjectsByCreatorId);
+router.post(
+    '/getProjectsByCreator',
+    passport.authenticate("jwt", { session: false }),
+    projectController.getProjectsByCreatorId
+);
+router.post(
+    '/createProject', passport.authenticate("jwt", { session: false }),
+    projectController.createProject);
 
-router.post('/createProject', passport.authenticate("jwt", {
-    session: false
-}), projectController.createProject);
-
-router.post('/getsingleproject', projectController.getSingleProject);
+router.post(
+    '/getsingleproject',
+    projectController.getSingleProject
+);
 
 //* Project Members routes
-router.post('/addmembers', passport.authenticate("jwt", {
-    session: false
-}), projectMemberController.addMembers)
+router.post(
+    '/addmembers',
+    passport.authenticate("jwt", { session: false }),
+    authenticateRoutes.isCreator, projectMemberController.addMembers)
 
 module.exports = router;

@@ -4,10 +4,10 @@ const User = require('../models/user');
 exports.getProjectsByCreatorId = (req, res) => {
   // finding projects created by this certain user
   Project.findAll({
-      where: {
-        creatorId: req.user.userId
-      }
-    })
+    where: {
+      creatorId: req.user.userId
+    }
+  })
     .then(projects => {
       return res.status(200).json({
         projects
@@ -22,14 +22,15 @@ exports.getProjectsByCreatorId = (req, res) => {
 
 exports.getSingleProject = (req, res) => {
   Project.findAll({
-      where: {
-        projectId: req.body.projectId
-      },
-      include: [{
-        model: User,
-        attributes: ['name']
-      }]
-    })
+    where: {
+      projectId: req.body.projectId
+    },
+    include: [{
+      model: User,
+      attributes: ['name'],
+      as: 'creator'
+    }]
+  })
     .then(projectInfo => {
       return res.status(200).json({
         projectInfo: projectInfo[0]
@@ -45,11 +46,11 @@ exports.getSingleProject = (req, res) => {
 exports.createProject = (req, res) => {
   //creating project with foreign key for user
   Project.create({
-      title: req.body.title,
-      description: req.body.description,
-      // foreign key to user : creatorId given from the jwt
-      creatorId: req.user.userId
-    })
+    title: req.body.title,
+    description: req.body.description,
+    // foreign key to user : creatorId given from the jwt
+    creatorId: req.user.userId
+  })
     .then(result => {
       ProjectMembers.create({
         memberId: req.user.userId,

@@ -11,14 +11,14 @@ const Project = require('../models/project')
 //! FOR TEST ONLY
 exports.getUserInfo = (req, res) => {
   User.findAll({
-      where: {
-        userId: req.user.userId
-      }
-    }).then(user => {
-      return res.status(200).json({
-        userInfo: user[0]
-      });
-    })
+    where: {
+      userId: req.user.userId
+    }
+  }).then(user => {
+    return res.status(200).json({
+      userInfo: user[0]
+    });
+  })
     .catch(err => {
       return res.status(500).json({
         err
@@ -28,22 +28,23 @@ exports.getUserInfo = (req, res) => {
 
 exports.getUserProjects = (req, res) => {
   ProjectMembers.findAll({
-      where: {
-        memberId: req.body.userId
-      },
+    where: {
+      memberId: req.user.userId
+    },
+    include: [{
+      model: Project,
+      attributes: ['title', 'projectId', 'description', 'createdAt'],
       include: [{
-        model: Project,
-        attributes: ['title', 'projectId', 'description', 'createdAt'],
-        include: [{
-          model: User,
-          attributes: ['name']
-        }]
+        model: User,
+        as: 'creator',
+        attributes: ['name']
       }]
-    }).then(projects => {
-      return res.status(200).json({
-        projects: projects.map(project => project.project)
-      });
-    })
+    }]
+  }).then(projects => {
+    return res.status(200).json({
+      projects: projects.map(project => project.project)
+    });
+  })
     .catch(err => {
       return res.status(500).json({
         err
@@ -71,11 +72,11 @@ exports.signUp = (req, res) => {
     } else if (hash) {
       //create user in database with the given attributes
       User.create({
-          userName: req.body.userName,
-          email: req.body.email,
-          name: req.body.name,
-          password: hash
-        })
+        userName: req.body.userName,
+        email: req.body.email,
+        name: req.body.name,
+        password: hash
+      })
         //sign up success
         .then(() => {
           return res.status(200).json({
