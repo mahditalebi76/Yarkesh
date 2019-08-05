@@ -8,7 +8,17 @@ exports.getProjectStories = (req, res) => {
     Story.findAll({
         where: {
             projectId: req.body.projectId
+        },
+        include: [{
+            model: User,
+            attributes: ['name'],
+            as: 'creator'
+        },
+        {
+            model: Project,
+            attributes: ['title']
         }
+        ]
     })
         .then(stories => {
             return res.status(200).json({
@@ -17,6 +27,7 @@ exports.getProjectStories = (req, res) => {
         })
         .catch(err => {
             return res.status(500).json({
+                message: 'finding story failed',
                 err
             });
         });
@@ -33,10 +44,10 @@ exports.createStory = (req, res) => {
         creatorId: req.user.userId,
         projectId: req.body.projectId
     })
-        .then(result => {
+        .then(story => {
             return res.status(200).json({
                 message: `story created!`,
-                result
+                story
             });
         })
         .catch(err => {

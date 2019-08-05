@@ -54,14 +54,13 @@ exports.getUserProjects = (req, res) => {
 
 
 exports.signUp = (req, res) => {
-
   //TODO FIX ERRORHANDLER
   //first we go to validation to validate the errors.  then we get a list and we call errorHandler.handler on it
   //then we get another list called handledErrorsList which contains errors beautifully
   const errorsList = validationResult(req).errors;
   const handledErrorsList = errorHandler.handler(errorsList);
   if (Object.keys(handledErrorsList).length > 0) {
-    return res.json(handledErrorsList);
+    return res.status(422).json(handledErrorsList);
   }
   //hasing the password
   bcrypt.hash(req.body.password, 10, (err, hash) => {
@@ -78,9 +77,12 @@ exports.signUp = (req, res) => {
         password: hash
       })
         //sign up success
-        .then(() => {
+        .then((user) => {
           return res.status(200).json({
-            message: 'sign up complete'
+            message: 'sign up complete',
+            userName: user.userName,
+            email: user.email,
+            userId: user.userId
           });
         })
         //sign up failed

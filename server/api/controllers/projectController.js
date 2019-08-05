@@ -51,12 +51,15 @@ exports.createProject = (req, res) => {
     // foreign key to user : creatorId given from the jwt
     creatorId: req.user.userId
   })
-    .then(result => {
+    .then(project => {
       ProjectMembers.create({
         memberId: req.user.userId,
-        projectId: result.projectId
+        projectId: project.projectId
       });
       return res.status(200).json({
+        title: project.title,
+        id: project.projectId,
+        creatorId: project.creatorId,
         message: `project created!`
       });
     })

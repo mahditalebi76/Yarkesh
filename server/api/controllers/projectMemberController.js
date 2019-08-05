@@ -18,9 +18,9 @@ exports.getProjectMembers = (req, res) => {
 
         ],
     })
-        .then(result => {
+        .then(members => {
             return res.status(200).json({
-                result
+                members
             });
         });
 };
@@ -31,14 +31,15 @@ exports.addMembers = (req, res) => {
         memberId: req.body.userId,
         projectId: req.body.projectId
     })
-        .then(() => {
+        .then((result) => {
             return res.status(200).json({
-                message: 'member added to project'
+                message: 'member added to project',
+                projectId: result.projectId,
+                memberId: result.memberId
             });
         })
         .catch(err => {
             return res.status(500).json({
-                error: err,
                 message: 'adding member FAILED !'
             });
         });

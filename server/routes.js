@@ -61,7 +61,8 @@ router.post('/getmembers',
 router.post(
     '/addmembers',
     passport.authenticate("jwt", { session: false }),
-    authenticateRoutes.isCreator, projectMemberController.addMembers
+    authenticateRoutes.isCreator,
+    projectMemberController.addMembers
 )
 
 //* story routes
@@ -75,6 +76,8 @@ router.post(
 
 router.post(
     '/getProjectStories',
+    passport.authenticate("jwt", { session: false }),
+    authenticateRoutes.isMember,
     storyController.getProjectStories
 );
 

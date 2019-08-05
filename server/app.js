@@ -36,9 +36,16 @@ ProjectMembers.belongsTo(User, {
     foreignKey: 'memberId',
     targetKey: 'userId'
 });
+
 Story.belongsTo(Project, {
     foreignKey: 'projectId',
     targetKey: 'projectId'
+})
+
+Story.belongsTo(User, {
+    foreignKey: 'creatorId',
+    targetKey: 'userId',
+    as: 'creator'
 })
 
 sequelize.sync();
