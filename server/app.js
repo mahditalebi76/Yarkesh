@@ -9,6 +9,7 @@ require('./config/passportJWTConfig')(passport);
 const User = require('./api/models/user');
 const Project = require('./api/models/project');
 const ProjectMembers = require('./api/models/projectMembers')
+const Story = require('./api/models/story');
 //! ---------------------- MIDDLEWARES ----------------------------------
 app.use(passport.initialize());
 app.use(
@@ -35,6 +36,11 @@ ProjectMembers.belongsTo(User, {
     foreignKey: 'memberId',
     targetKey: 'userId'
 });
+Story.belongsTo(Project, {
+    foreignKey: 'projectId',
+    targetKey: 'projectId'
+})
+
 sequelize.sync();
 
 module.exports = app;

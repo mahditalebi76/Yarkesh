@@ -7,16 +7,6 @@ const projectMemberController = require('./api/controllers/projectMemberControll
 const storyController = require('./api/controllers/storyController')
 const authenticateRoutes = require('./api/controllers/authentication')
 //! ----------------------------------Test Routes Not finished----------------------------------
-router.post('/createStory', passport.authenticate("jwt", {
-    session: false
-}), authenticateRoutes.isMember, storyController.createStory);
-router.post('/getProjectStories', storyController.getProjectStories);
-router.post('/getStoryDetails', passport.authenticate("jwt", {
-    session: false
-}), authenticateRoutes.isMember, storyController.getStoryDetials);
-
-router.post('/getmembers', projectMemberController.getProjectMembers)
-
 
 //!----------------------------------Finished Routes----------------------------------
 
@@ -54,14 +44,46 @@ router.post(
     projectController.createProject);
 
 router.post(
-    '/getsingleproject',
-    projectController.getSingleProject
+    '/getProjectDetails',
+    passport.authenticate("jwt", { session: false }),
+    authenticateRoutes.isMember,
+    projectController.getProjectDetails
 );
+
+router.post('/getmembers',
+    passport.authenticate("jwt", { session: false }),
+    authenticateRoutes.isMember,
+    projectMemberController.getProjectMembers
+)
+
 
 //* Project Members routes
 router.post(
     '/addmembers',
     passport.authenticate("jwt", { session: false }),
-    authenticateRoutes.isCreator, projectMemberController.addMembers)
+    authenticateRoutes.isCreator, projectMemberController.addMembers
+)
+
+//* story routes
+
+router.post(
+    '/createStory',
+    passport.authenticate("jwt", { session: false }),
+    authenticateRoutes.isMember,
+    storyController.createStory
+);
+
+router.post(
+    '/getProjectStories',
+    storyController.getProjectStories
+);
+
+router.post(
+    '/getStoryDetails',
+    passport.authenticate("jwt", { session: false }),
+    authenticateRoutes.isMember,
+    storyController.getStoryDetials
+);
+
 
 module.exports = router;

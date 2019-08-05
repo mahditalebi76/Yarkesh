@@ -20,7 +20,7 @@ exports.getProjectsByCreatorId = (req, res) => {
     });
 };
 
-exports.getSingleProject = (req, res) => {
+exports.getProjectDetails = (req, res) => {
   Project.findAll({
     where: {
       projectId: req.body.projectId
